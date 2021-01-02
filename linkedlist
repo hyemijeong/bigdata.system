@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node * next;
+};
+struct Node * createNode(int value)
+{
+    struct Node * newNode;
+
+    newNode = (struct Node *) malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    return newNode;
+}
+void insertNext(struct Node *curr, int value)
+{
+
+    struct Node * newNode;
+
+    newNode = createNode(value);
+    newNode->next = curr->next;
+    curr->next = newNode;
+}
+
+void insertSort(struct Node *head)
+{
+    struct Node *curr,*p;
+    curr=head;
+    while(curr->data!=NULL){
+        printf("head:%d\n",head->data);
+         printf("curr:%d\n",curr->data);
+
+        if(curr->data>curr->next->data){
+            p=curr->next;
+
+            curr->next=curr->next->next;
+            p->next=head;
+            head=p;
+            printf("head:%d\n",head->data);
+
+            curr=p;
+            printf("curr:%d\n",curr->data);
+
+        }
+        curr=curr->next;
+        printAll(head);
+    }
+    printf("head:%d",head->data);//????? 왜 안나오징..
+    printAll(head);
+
+}
+struct Node * searchNode(struct Node * head, int value)
+{
+     struct Node * curr;
+     curr = head;
+     while (curr!= NULL) {
+         if (curr->data == value)
+         return curr;
+         curr = curr->next;
+     }
+     return NULL;
+}
+void delnode(struct Node *head, int value)
+{
+    struct Node *curr;
+    curr=head;
+
+    if(curr->data==value){
+        head->next=NULL;
+        head=curr->next;
+    }
+
+    else{
+        while(curr->next->data!=value){
+            curr=curr->next;
+        }
+        printf("curr:%d\n",curr->data);
+        curr->next=curr->next->next;
+        if(curr==NULL){
+            printf("no find this value\n");
+        }
+    }
+}
+void printAll(struct Node * node)
+{
+     while(node != NULL) {
+         printf("[%d]->", node->data);
+         node = node->next;
+     }
+     printf("NULL\n");
+}
+
+int main()
+{
+     struct Node *head, *temp;
+
+
+     head = NULL;
+
+     temp = createNode(3);
+     head = temp;
+
+     temp = createNode(5);
+     temp->next = head;
+     head = temp;
+
+     temp = createNode(7);
+     temp->next = head;
+     head = temp;
+
+     temp = searchNode(head, 5);
+     insertNext(temp, 9);
+
+     temp = createNode(2);
+     temp->next = head;
+     head = temp;
+
+     temp = createNode(6);
+     temp->next = head;
+     head = temp;
+
+     printAll(head);
+     insertSort(head);
+     printAll(head);
+
+
+
+}
