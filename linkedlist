@@ -95,7 +95,7 @@ void delnode(struct Node *head, int value)
     if(curr=NULL){
         printf("!no value that you find in this list!\n");
     }
-    //왜 안됨..... ㅜㅜㅜ
+   
 
 }
 void printAll(struct Node * head)
