@@ -1,0 +1,173 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_TBL 100
+#define STR_LEN 50
+
+struct InfoNode {
+    int key;
+    struct InfoNode * next;
+};
+
+struct Table {
+    struct InfoNode tbl[MAX_TBL];
+};
+
+int hashFunc(int key) {
+    return key % 10;
+}
+
+void initTable(struct Table * t) {
+    int i;
+    for (i=0; i < MAX_TBL; i++) {
+    (t->tbl[i]).key = 0;
+    (t->tbl[i]).next = NULL;
+    }
+}
+char * searchTable(struct Table * t, int key) {
+    int hKey = hashFunc(key);
+
+    if ((t->tbl[hKey]).key == key) {//2
+        return (t->tbl[hKey]).key;
+    }
+    else { //3
+        struct InfoNode * node = (t->tbl[hKey]).next;
+        while(node != NULL) {
+            if(node->key == key) {//4
+                return node->key;
+            }
+        node = node->next;
+    }
+ }
+    return NULL; //5
+}
+
+struct InfoNode * createNode(int key) { //6
+    struct InfoNode * newNode;
+
+    newNode = (struct InfoNode *) malloc(sizeof(struct InfoNode));
+    newNode->key = key;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void insertNext(struct InfoNode *curr, int key) { //7
+    struct InfoNode * newNode;
+
+    newNode = createNode(key);
+    newNode->next = curr->next;
+    curr->next = newNode;
+}
+
+void insertTable(struct Table * t, int key) { //8
+    int hKey = hashFunc(key);
+    if (searchTable(t, key) != NULL) {
+    printf("Error! duplicated keys!\n");
+
+    }
+    else {
+        insertNext(&t->tbl[hKey], key);
+    }
+}
+char * deleteTable(struct Table * t, int key) {
+
+    int hKey = hashFunc(key);
+    struct InfoNode *head;//hashFunc함수를 이용하여 hkey값을 가져온다.
+    struct InfoNode * node = (t->tbl[hKey]).next;
+    struct InfoNode *curr = (t->tbl[hKey]).next;
+//t->tbl[hkey]의 next값(등록된 값들)을 가리키는 포인터를 두개 만들어준다.
+        while(node != NULL) {
+            if (node->key == key) {//4
+                if((node->key)==(t->tbl[hKey]).next->key){
+                    t->tbl[hKey].next=node->next;
+                }
+//node는 tbl배열에서 next로 넘어가면서 인자로 받은 key값과 같은 값이 있으면 그 전의 노드와 그 다음의 노드를 연결하여 같은 key값을 가진 노드의 연결을 끊어 없애준다. 이때 첫번째 노드는 tbl[hkey]의 next이므로 이를 이용하여 첫번 째 노드인지를 찾고 연결을 끊어준다.
+
+                else{
+                    while(curr->next!=node){
+                        curr->next=node->next;
+                        curr=curr->next;
+                    }
+                }
+//key값이 같은 노드를 node포인터로 찾고 그 전 노드와 없앨 노드의 다음노드를 연결해주기 위해 그 전 노드를 curr포인터로 가리킨다. 그 후 curr의 next를 없앨 노드의 다음노드로 연결해준다.
+                node->next=NULL;
+            }
+            node=node->next;
+
+        }
+}
+/*
+void insertSort(struct Table * t)
+{
+
+    struct InfoNode *curr,*p,*head;
+
+    for(int i=0; i<10; i++){
+
+        head=t->tbl[i].next;
+        curr=t->tbl[i].next;
+        p=NULL;
+        while(curr->next!=NULL){
+
+            if(curr->key>curr->next->key){
+                p=curr->next;
+                curr->next=curr->next->next;
+
+                p->next=head;
+                head=p;
+                curr=p;
+
+            }
+            else{
+                curr=curr->next;
+            }
+        }
+
+    }
+
+    printf("inserSort result:");
+    printAll(t);
+
+}
+*/
+void printAll(struct Table * t){
+
+    for(int i=0; i<10; i++){
+        struct InfoNode *node;
+        node=(t->tbl[i]).next;
+        printf("hashtable[%d]:",i);
+        while(node!=NULL){
+            printf("->%d",node->key);
+            node=node->next;
+        }
+        printf("\n");
+
+    }
+
+}
+
+int main(int argc, const char * argv[]) {
+    struct Table myTable;
+    initTable(&myTable);
+    insertTable(&myTable, 9001);
+    insertTable(&myTable, 8001);
+    insertTable(&myTable, 7001);
+    insertTable(&myTable, 9002);
+    insertTable(&myTable, 9003);
+    insertTable(&myTable, 9124);
+    insertTable(&myTable, 9013);
+    insertTable(&myTable, 9021);
+    insertTable(&myTable, 9011);
+    insertTable(&myTable, 9024); //10
+
+    printAll(&myTable);
+
+    printf("--------------\n");
+
+    deleteTable(&myTable,9002);
+    printAll(&myTable);
+    //insertSort(&myTable);
+
+    return 0;
+}
+
