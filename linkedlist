@@ -1,3 +1,4 @@
+```c
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -59,7 +60,7 @@ void insertSort(struct Node *head)
 
 }
 //curr이 맨 처음 노드를 지정한 후 반복문으로 모든 노드를 한번씩 지정하게 되면서 value값과 같은 data값을 가진 노드를 지정하게 되면 그 노드를 return해준다.
-{
+void *searchNode(struct Node *head, int value){
      struct Node * curr;
      curr = head;
      while (curr!= NULL) {
@@ -152,3 +153,4 @@ int main()
 
 
 }
+```
